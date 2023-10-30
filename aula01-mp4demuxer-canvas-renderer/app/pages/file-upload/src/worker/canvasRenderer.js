@@ -1,31 +1,28 @@
+/** @param {HTMLCanvasElement} canvas */
+let _canvas = {}
+let _ctx = {}
 export default class CanvasRenderer {
-    #canvas
-    #ctx
-    /** @param {HTMLCanvasElement} canvas */
-    constructor(canvas) {
-        this.#canvas = canvas
-        this.#ctx = canvas.getContext('2d')
-    }
-    /**
-     * 
-     * @param {VideoFrame} frame 
-     */
-    draw(frame) {
+
+    /** @param {VideoFrame} frame */
+
+    static draw(frame) {
         const { displayHeight, displayWidth} = frame
 
-        this.#canvas.width = displayWidth
-        this.#canvas.height = displayHeight
-        this.#ctx.drawImage(
+        _canvas.width = displayWidth
+        _canvas.height = displayHeight
+        _ctx.drawImage(
             frame,
             0,
             0,
-            displayHeight,
-            displayWidth
+            displayWidth,
+            displayHeight
         )
         frame.close()
     }
 
-    getRenderer() {
+    static getRenderer(canvas) {
+        _canvas = canvas
+        _ctx = canvas.getContext('2d')
         const renderer = this
         let pendingFrame = null
         return frame => {
@@ -38,6 +35,8 @@ export default class CanvasRenderer {
             } else {
                 pendingFrame.close()
             }
+
+            pendingFrame = frame
         }
     }
 }

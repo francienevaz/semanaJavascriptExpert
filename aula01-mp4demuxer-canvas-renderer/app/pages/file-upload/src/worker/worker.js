@@ -37,10 +37,10 @@ const  videoProcessor = new VideoProcessor({
 })
 
 onmessage = async ({data}) => {
-    const renderFrame = new CanvasRenderer(data.canvas).getRenderer()
+    const renderFrame = CanvasRenderer.getRenderer(data.canvas)
     await videoProcessor.start({
         file: data.file,
-        renderFrame: renderFrame,
+        renderFrame,
         encoderConfig,
         sendMessage(message) {
             self.postMessage(message);
